@@ -1,0 +1,23 @@
+{
+  "ecmaVersion": 6,
+  "parserOptions": {
+    "syntaxErrors": 1,
+    "reservedWordsInPropNames": 1,
+    "returnOutsideOfFunction": 1,
+    "importExportOutsideOfTopBlock": 1,
+    "hashBang": 0,
+    "pebbleSyntax": 2
+  },
+  "plugins": {
+    "guess-types": {
+      
+    },
+    "doc_comment": {
+      "strong": true
+    }
+  },
+  "libs": [
+    "ecma5",
+    "browser"
+  ]
+}

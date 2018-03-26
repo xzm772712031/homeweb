@@ -1,0 +1,252 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.neusoft.mapper.NewsMapper">
+  <resultMap id="BaseResultMap" type="com.neusoft.pojo.News">
+    <id column="newsId" jdbcType="INTEGER" property="newsId" />
+    <result column="newsTitle" jdbcType="VARCHAR" property="newsTitle" />
+    <result column="newsContext" jdbcType="VARCHAR" property="newsContext" />
+    <result column="newsImages" jdbcType="VARCHAR" property="newsImages" />
+    <result column="newsDate" jdbcType="DATE" property="newsDate" />
+     <result column="newsType" jdbcType="VARCHAR" property="newsType" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    newsId, newsTitle, newsContext, newsImages, newsDate,newsType
+  </sql>
+  <select id="selectByExample" parameterType="com.neusoft.pojo.NewsExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from news
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+    <if test="limit != null">
+      <if test="offset != null">
+        limit ${offset}, ${limit}
+      </if>
+      <if test="offset == null">
+        limit ${limit}
+      </if>
+    </if>
+  </select>
+  
+  <select id="selectnews" resultMap="BaseResultMap" parameterType="java.util.HashMap"> 
+  select 
+  <include refid="Base_Column_List" />
+  from news where newstype='news'
+  <if test="start!=null and size!=null">
+            limit #{start},#{size}
+        </if>
+  </select>
+  <select id="count" resultType="int" > 
+ select count(*) from news where newstype='news'
+  </select>
+  
+    <select id="selectanswer" resultMap="BaseResultMap" parameterType="java.util.HashMap"> 
+  select 
+  <include refid="Base_Column_List" />
+  from news where newstype='answer'
+  <if test="start!=null and size!=null">
+            limit #{start},#{size}
+        </if>
+  </select>
+  <select id="count2" resultType="int" > 
+ select count(*) from news where newstype='answer'
+  </select>
+  
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from news
+    where newsId = #{newsId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from news
+    where newsId = #{newsId,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.neusoft.pojo.NewsExample">
+    delete from news
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.neusoft.pojo.News">
+    <selectKey keyProperty="newsId" order="AFTER" resultType="java.lang.Integer">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into news (newsTitle, newsContext, newsImages, 
+      newsDate)
+    values (#{newsTitle,jdbcType=VARCHAR}, #{newsContext,jdbcType=VARCHAR}, #{newsImages,jdbcType=VARCHAR}, 
+      #{newsDate,jdbcType=DATE})
+  </insert>
+  <insert id="insertSelective" parameterType="com.neusoft.pojo.News">
+    <selectKey keyProperty="newsId" order="AFTER" resultType="java.lang.Integer">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into news
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="newsTitle != null">
+        newsTitle,
+      </if>
+      <if test="newsContext != null">
+        newsContext,
+      </if>
+      <if test="newsImages != null">
+        newsImages,
+      </if>
+      <if test="newsDate != null">
+        newsDate,
+      </if>
+        <if test="newsType != null">
+        newsType,
+      </if>
+      
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="newsTitle != null">
+        #{newsTitle,jdbcType=VARCHAR},
+      </if>
+      <if test="newsContext != null">
+        #{newsContext,jdbcType=VARCHAR},
+      </if>
+      <if test="newsImages != null">
+        #{newsImages,jdbcType=VARCHAR},
+      </if>
+      <if test="newsDate != null">
+        #{newsDate,jdbcType=DATE},
+      </if>
+      <if test="newsType != null">
+        #{newsType,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.neusoft.pojo.NewsExample" resultType="java.lang.Long">
+    select count(*) from news
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update news
+    <set>
+      <if test="record.newsId != null">
+        newsId = #{record.newsId,jdbcType=INTEGER},
+      </if>
+      <if test="record.newsTitle != null">
+        newsTitle = #{record.newsTitle,jdbcType=VARCHAR},
+      </if>
+      <if test="record.newsContext != null">
+        newsContext = #{record.newsContext,jdbcType=VARCHAR},
+      </if>
+      <if test="record.newsImages != null">
+        newsImages = #{record.newsImages,jdbcType=VARCHAR},
+      </if>
+      <if test="record.newsDate != null">
+        newsDate = #{record.newsDate,jdbcType=DATE},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update news
+    set newsId = #{record.newsId,jdbcType=INTEGER},
+      newsTitle = #{record.newsTitle,jdbcType=VARCHAR},
+      newsContext = #{record.newsContext,jdbcType=VARCHAR},
+      newsImages = #{record.newsImages,jdbcType=VARCHAR},
+      newsDate = #{record.newsDate,jdbcType=DATE}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.neusoft.pojo.News">
+    update news
+    <set>
+      <if test="newsTitle != null">
+        newsTitle = #{newsTitle,jdbcType=VARCHAR},
+      </if>
+      <if test="newsContext != null">
+        newsContext = #{newsContext,jdbcType=VARCHAR},
+      </if>
+      <if test="newsImages != null">
+        newsImages = #{newsImages,jdbcType=VARCHAR},
+      </if>
+      <if test="newsDate != null">
+        newsDate = #{newsDate,jdbcType=DATE},
+      </if>
+    </set>
+    where newsId = #{newsId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.neusoft.pojo.News">
+    update news
+    set newsTitle = #{newsTitle,jdbcType=VARCHAR},
+      newsContext = #{newsContext,jdbcType=VARCHAR},
+      newsImages = #{newsImages,jdbcType=VARCHAR},
+      newsDate = #{newsDate,jdbcType=DATE}
+    where newsId = #{newsId,jdbcType=INTEGER}
+  </update>
+</mapper>

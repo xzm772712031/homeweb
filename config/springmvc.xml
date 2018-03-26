@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xmlns:task="http://www.springframework.org/schema/task"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.0.xsd
+		http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-4.0.xsd
+		http://www.springframework.org/schema/task
+        http://www.springframework.org/schema/task/spring-task-3.2.xsd">
+
+	<!-- 自动扫描该包 @controller注解的类 -->
+	<context:component-scan base-package="com.neusoft.controller" />
+	<!-- 静态资源处理 -->
+	<mvc:default-servlet-handler />
+	<!-- 定时器自动扫描 -->
+	<task:annotation-driven/>
+	<!--自动注册 RequestMappingHandlerMapping、RequestMappingHandlerAdapter 等bean -->
+	<mvc:annotation-driven>
+		<mvc:message-converters>
+			<bean class="org.springframework.http.converter.StringHttpMessageConverter">
+				<property name="defaultCharset" value="UTF-8"/>
+			</bean>
+			<bean class="com.alibaba.fastjson.support.spring.FastJsonHttpMessageConverter4"/>
+		</mvc:message-converters>
+	</mvc:annotation-driven>
+	<mvc:default-servlet-handler/>
+	<bean id="fastJsonpResponseBodyAdvice" class="com.alibaba.fastjson.support.spring.FastJsonpResponseBodyAdvice">
+		<constructor-arg>
+			<list>
+				<value>callback</value>
+				<value>jsonp</value>
+			</list>
+		</constructor-arg>
+	</bean>
+	<import resource="classpath:spring-mybatis.xml"/>
+	<!-- 定义跳转的文件的前后缀 ，视图模式配置 -->
+	<bean
+		class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+		<property name="prefix" value="/" />
+		<property name="suffix" value=".jsp" />
+	</bean>
+
+	<bean id="conversionService"
+		class="org.springframework.format.support.FormattingConversionServiceFactoryBean">
+		<!-- 转换器 -->
+		<property name="converters">
+			<list>
+				<!-- 日期类型转换 -->
+				<bean class="com.neusoft.controller.converter.CustomDateConverter" />
+			</list>
+		</property>
+	</bean>
+	
+<bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">    
+    <!-- 设置默认编码 -->  
+    <property name="defaultEncoding" value="utf-8"></property>  
+    <!-- 上传图片最大大小5M-->   
+    <property name="maxUploadSize" value="5242440"></property>    
+    </bean> 
+	
+	<mvc:interceptors>
+        <mvc:interceptor>
+            <mvc:mapping path="/**"/>
+            <bean class="com.neusoft.interceptor.LoginInterceptor2">
+             <!-- 配置属性列表 -->
+             <property name="excludeMappingUrl"><!-- 列表中包含的文件后缀 -->
+                <list>
+                    <value>/login</value>
+                    <value>/vaild</value>
+                    <value>/out</value>
+                    <value>.js</value>
+                    <value>.css</value>
+                    <value>.gif</value>
+                    <value>.png</value>
+                    <value>.map</value>
+                    <value>.jpg</value>
+                    <value>.woff3</value>
+                    <value>.woff2</value>
+                    <value>.woff</value>
+                    <value>.ttf</value>
+                    <value>.json</value>
+                    <value>.xml</value>
+                    <value>.html</value>
+                    <value>null</value>
+                    <value>.jsonp</value>
+                </list>
+             </property>
+            </bean>
+        </mvc:interceptor>
+    </mvc:interceptors>
+	
+	
+	
+	
+	
+</beans>

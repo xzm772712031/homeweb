@@ -1,0 +1,320 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.neusoft.mapper.FeedbackMapper">
+  <resultMap id="BaseResultMap" type="com.neusoft.pojo.Feedback">
+    <id column="FeedbackId" jdbcType="INTEGER" property="feedbackId" />
+    <result column="Order_Id" jdbcType="INTEGER" property="order_Id" />
+    <result column="User_Id" jdbcType="INTEGER" property="user_Id" />
+    <result column="FeedBackType_Id" jdbcType="INTEGER" property="feedBackType_Id" />
+    <result column="FeedbackTitle" jdbcType="VARCHAR" property="feedbackTitle" />
+    <result column="FeedbackDate" jdbcType="TIMESTAMP" property="feedbackDate" />
+    <result column="FeedbackContent" jdbcType="VARCHAR" property="feedbackContent" />
+    <result column="FeedbackImage" jdbcType="VARCHAR" property="feedbackImage" />
+    <result column="FeedbackState" jdbcType="INTEGER" property="feedbackState" />
+    <result column="feedback" jdbcType="VARCHAR" property="feedback" />
+    <association property="user" javaType="com.neusoft.pojo.User">
+     <id column="userId" jdbcType="INTEGER" property="userId" />
+     <result column="userName" jdbcType="VARCHAR" property="userName" />
+    </association>
+     <association property="feedbacktype" javaType="com.neusoft.pojo.Feedbacktype">
+     <id column="feedbackTypeId" jdbcType="INTEGER" property="feedbackTypeId" />
+     <result column="feedbackTypeName" jdbcType="VARCHAR" property="feedbackTypeName" />
+    </association>
+    
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    FeedbackId, Order_Id, FeedBackType_Id, FeedbackTitle, FeedbackDate, FeedbackContent, 
+    FeedbackImage, FeedbackState,user_Id,feedback
+  </sql>
+  <select id="selectByExample" parameterType="com.neusoft.pojo.FeedbackExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from feedback
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+    <if test="limit != null">
+      <if test="offset != null">
+        limit ${offset}, ${limit}
+      </if>
+      <if test="offset == null">
+        limit ${limit}
+      </if>
+    </if>
+  </select>
+ 
+  <select id="count"  parameterType="com.neusoft.pojo.Feedback" resultType="int">
+  
+  select count(*) from Feedback 
+  <where>
+  <if test="feedbackState!=null">
+  feedbackState = #{feedbackState}
+  </if>
+  </where> 
+  
+  </select>
+  
+  <select id="selectFeedback" resultMap="BaseResultMap" parameterType="java.util.HashMap"> 
+  select 
+  <include refid="Base_Column_List"></include>,userName,feedbackTypeName from user, Feedback,feedbackType
+  where userid=user_Id and feedbackTypeId= feedbackType_Id and 1=1
+   <if test="feedbackState!=null">
+   and
+  feedbackState = #{feedbackState}
+  </if>
+  <if test="start!=null and size!=null">
+            limit #{start},#{size}
+        </if>
+  </select>
+   
+  <select id="selectFeedbackLike" parameterType="String" resultMap="BaseResultMap">
+  select
+   <include refid="Base_Column_List"></include>,userName,feedbackTypeName from user, Feedback,feedbackType
+  where userid=user_Id and feedbackTypeId= feedbackType_Id and 1=1
+    <if test=" _parameter!=null and  _parameter!='' ">     
+    and  feedbackId = (CONVERT(#{_parameter},SIGNED))
+    </if>
+    <if test=" _parameter!=null and  _parameter!='' ">     
+    or FeedbackTitle like "%${_parameter}%"
+    </if>
+   </select>
+       
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+   ,userName,feedbackTypeName from user, Feedback,feedbackType
+  where userid=user_Id and feedbackTypeId= feedbackType_Id and 1=1
+    and FeedbackId = #{feedbackId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from feedback
+    where FeedbackId = #{feedbackId,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.neusoft.pojo.FeedbackExample">
+    delete from feedback
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.neusoft.pojo.Feedback">
+    <selectKey keyProperty="feedbackId" order="AFTER" resultType="java.lang.Integer">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into feedback (Order_Id, FeedBackType_Id, FeedbackTitle, 
+      FeedbackDate, FeedbackContent, FeedbackImage, 
+      FeedbackState)
+    values (#{order_Id,jdbcType=INTEGER}, #{feedBackType_Id,jdbcType=INTEGER}, #{feedbackTitle,jdbcType=VARCHAR}, 
+      #{feedbackDate,jdbcType=TIMESTAMP}, #{feedbackContent,jdbcType=VARCHAR}, #{feedbackImage,jdbcType=VARCHAR}, 
+      #{feedbackState,jdbcType=INTEGER})
+  </insert>
+  <insert id="insertSelective" parameterType="com.neusoft.pojo.Feedback">
+    <selectKey keyProperty="feedbackId" order="AFTER" resultType="java.lang.Integer">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into feedback
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="order_Id != null">
+        Order_Id,
+      </if>
+      <if test="feedBackType_Id != null">
+        FeedBackType_Id,
+      </if>
+      <if test="feedbackTitle != null">
+        FeedbackTitle,
+      </if>
+      <if test="feedbackDate != null">
+        FeedbackDate,
+      </if>
+      <if test="feedbackContent != null">
+        FeedbackContent,
+      </if>
+      <if test="feedbackImage != null">
+        FeedbackImage,
+      </if>
+      <if test="feedbackState != null">
+        FeedbackState,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="order_Id != null">
+        #{order_Id,jdbcType=INTEGER},
+      </if>
+      <if test="feedBackType_Id != null">
+        #{feedBackType_Id,jdbcType=INTEGER},
+      </if>
+      <if test="feedbackTitle != null">
+        #{feedbackTitle,jdbcType=VARCHAR},
+      </if>
+      <if test="feedbackDate != null">
+        #{feedbackDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="feedbackContent != null">
+        #{feedbackContent,jdbcType=VARCHAR},
+      </if>
+      <if test="feedbackImage != null">
+        #{feedbackImage,jdbcType=VARCHAR},
+      </if>
+      <if test="feedbackState != null">
+        #{feedbackState,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.neusoft.pojo.FeedbackExample" resultType="java.lang.Long">
+    select count(*) from feedback
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update feedback
+    <set>
+      <if test="record.feedbackId != null">
+        FeedbackId = #{record.feedbackId,jdbcType=INTEGER},
+      </if>
+      <if test="record.order_Id != null">
+        Order_Id = #{record.order_Id,jdbcType=INTEGER},
+      </if>
+      <if test="record.feedBackType_Id != null">
+        FeedBackType_Id = #{record.feedBackType_Id,jdbcType=INTEGER},
+      </if>
+      <if test="record.feedbackTitle != null">
+        FeedbackTitle = #{record.feedbackTitle,jdbcType=VARCHAR},
+      </if>
+      <if test="record.feedbackDate != null">
+        FeedbackDate = #{record.feedbackDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.feedbackContent != null">
+        FeedbackContent = #{record.feedbackContent,jdbcType=VARCHAR},
+      </if>
+      <if test="record.feedbackImage != null">
+        FeedbackImage = #{record.feedbackImage,jdbcType=VARCHAR},
+      </if>
+      <if test="record.feedbackState != null">
+        FeedbackState = #{record.feedbackState,jdbcType=INTEGER},
+      </if>
+      
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update feedback
+    set FeedbackId = #{record.feedbackId,jdbcType=INTEGER},
+      Order_Id = #{record.order_Id,jdbcType=INTEGER},
+      FeedBackType_Id = #{record.feedBackType_Id,jdbcType=INTEGER},
+      FeedbackTitle = #{record.feedbackTitle,jdbcType=VARCHAR},
+      FeedbackDate = #{record.feedbackDate,jdbcType=TIMESTAMP},
+      FeedbackContent = #{record.feedbackContent,jdbcType=VARCHAR},
+      FeedbackImage = #{record.feedbackImage,jdbcType=VARCHAR},
+      FeedbackState = #{record.feedbackState,jdbcType=INTEGER}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.neusoft.pojo.Feedback">
+    update feedback
+    <set>
+      <if test="order_Id != null">
+        Order_Id = #{order_Id,jdbcType=INTEGER},
+      </if>
+      <if test="feedBackType_Id != null">
+        FeedBackType_Id = #{feedBackType_Id,jdbcType=INTEGER},
+      </if>
+      <if test="feedbackTitle != null">
+        FeedbackTitle = #{feedbackTitle,jdbcType=VARCHAR},
+      </if>
+      <if test="feedbackDate != null">
+        FeedbackDate = #{feedbackDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="feedbackContent != null">
+        FeedbackContent = #{feedbackContent,jdbcType=VARCHAR},
+      </if>
+      <if test="feedbackImage != null">
+        FeedbackImage = #{feedbackImage,jdbcType=VARCHAR},
+      </if>
+      <if test="feedbackState != null">
+        FeedbackState = #{feedbackState,jdbcType=INTEGER},
+      </if>
+        <if test="feedback != null">
+        feedback = #{feedback,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where FeedbackId = #{feedbackId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.neusoft.pojo.Feedback">
+    update feedback
+    set Order_Id = #{order_Id,jdbcType=INTEGER},
+      FeedBackType_Id = #{feedBackType_Id,jdbcType=INTEGER},
+      FeedbackTitle = #{feedbackTitle,jdbcType=VARCHAR},
+      FeedbackDate = #{feedbackDate,jdbcType=TIMESTAMP},
+      FeedbackContent = #{feedbackContent,jdbcType=VARCHAR},
+      FeedbackImage = #{feedbackImage,jdbcType=VARCHAR},
+      FeedbackState = #{feedbackState,jdbcType=INTEGER}
+    where FeedbackId = #{feedbackId,jdbcType=INTEGER}
+  </update>
+</mapper>

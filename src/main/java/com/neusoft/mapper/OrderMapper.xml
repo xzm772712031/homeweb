@@ -1,0 +1,390 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.neusoft.mapper.OrderMapper">
+  <resultMap id="BaseResultMap" type="com.neusoft.pojo.Order">
+    <id column="OrderId" jdbcType="INTEGER" property="orderId" />
+    <result column="User_Id" jdbcType="INTEGER" property="user_Id" />
+    <result column="Bespeak_Id" jdbcType="INTEGER" property="bespeak_Id" />
+    <result column="OrderDate" jdbcType="TIMESTAMP" property="orderDate" />
+    <result column="OrderPrice" jdbcType="DOUBLE" property="orderPrice" />
+    <result column="OrderComment" jdbcType="VARCHAR" property="orderComment" />
+    <result column="OrderState" jdbcType="INTEGER" property="orderState" />
+  </resultMap>
+  <resultMap id="OrderMap" type="com.neusoft.pojo.Order">
+		<id column="OrderId" jdbcType="INTEGER" property="orderId" />
+		<result column="User_Id" jdbcType="INTEGER" property="user_Id" />
+		<result column="Bespeak_Id" jdbcType="INTEGER" property="bespeak_Id" />
+		<result column="OrderDate" jdbcType="TIMESTAMP" property="orderDate" />
+		<result column="OrderPrice" jdbcType="DOUBLE" property="orderPrice" />
+		<result column="OrderComment" jdbcType="VARCHAR" property="orderComment" />
+		<result column="OrderState" jdbcType="INTEGER" property="orderState" />
+		<association property="user" javaType="com.neusoft.pojo.User">
+			<id column="userId" jdbcType="INTEGER" property="userId" />
+			<result column="userName" jdbcType="VARCHAR" property="userName" />
+			<result column="userBirthday" jdbcType="TIMESTAMP" property="userBirthday" />
+			<result column="userEmail" jdbcType="VARCHAR" property="userEmail" />
+			<result column="userTel" jdbcType="VARCHAR" property="userTel" />
+			<result column="userAccount" jdbcType="VARCHAR" property="userAccount" />
+			<result column="userPassword" jdbcType="VARCHAR" property="userPassword" />
+			<result column="userAddress" jdbcType="VARCHAR" property="userAddress" />
+			<result column="USerSex" jdbcType="VARCHAR" property="USerSex" />
+			<result column="userPersonId" jdbcType="VARCHAR" property="userPersonId" />
+			<result column="userState" jdbcType="INTEGER" property="userState" />
+		</association>
+    		<association property="bespeak" javaType="com.neusoft.pojo.Bespeak">
+			<id column="bespeakId" jdbcType="INTEGER" property="bespeakId" />
+			<result column="user_Id" jdbcType="INTEGER" property="user_Id" />
+			<result column="bespeakCity" jdbcType="VARCHAR" property="bespeakCity" />
+			<result column="bespeakOut" jdbcType="VARCHAR" property="bespeakOut" />
+			<result column="bespeakIn" jdbcType="VARCHAR" property="bespeakIn" />
+			<result column="bespeakDate" jdbcType="TIMESTAMP" property="bespeakDate" />
+			<result column="bespeakAtten" jdbcType="VARCHAR" property="bespeakAtten" />
+			<result column="bespeakTel" jdbcType="VARCHAR" property="bespeakTel" />
+			<result column="goodsType" jdbcType="VARCHAR" property="goodsType" />
+			<result column="serviceType_Id" jdbcType="INTEGER" property="serviceType_Id" />
+			<result column="bespeakAdd" jdbcType="VARCHAR" property="bespeakAdd" />
+			<result column="date" jdbcType="TIMESTAMP" property="date" />
+			<result column="bespeakState" jdbcType="INTEGER" property="bespeakState" />
+			<association property="servicetype" javaType="com.neusoft.pojo.Servicetype">
+				<id column="serviceTypeId" jdbcType="INTEGER" property="serviceTypeId" />
+				<result column="serviceTypeName" jdbcType="VARCHAR" property="serviceTypeName" />
+			</association>
+		</association>
+	</resultMap>
+ <resultMap id="cMap" type="com.neusoft.pojo.Ordercar">
+    <id column="OrderCarId" jdbcType="INTEGER" property="orderCarId" />
+    <result column="Order_Id" jdbcType="INTEGER" property="order_Id" />
+    <result column="Car_Id" jdbcType="INTEGER" property="car_Id" />
+    <association property="car" javaType="com.neusoft.pojo.Car"> 
+    <id column="CarId" jdbcType="INTEGER" property="carId" />
+    <result column="CarName" jdbcType="VARCHAR" property="carName" />
+    <result column="CarType" jdbcType="INTEGER" property="carType" />
+    <result column="CarClient" jdbcType="VARCHAR" property="carClient" />
+    <result column="CarState" jdbcType="INTEGER" property="carState" />  
+    <association property="cartype" javaType="com.neusoft.pojo.Cartype">
+     <id column="carTypeId" jdbcType="INTEGER" property="carTypeId" />
+     <result column="carTypeName" jdbcType="VARCHAR" property="carTypeName" />
+    </association>  
+    </association>
+  </resultMap>
+  <resultMap id="eMap" type="com.neusoft.pojo.Orderepolyee">
+    <id column="OrderdEpolyeeId" jdbcType="INTEGER" property="orderdEpolyeeId" />
+    <result column="Order_ID" jdbcType="INTEGER" property="order_ID" />
+    <result column="Epolyee_Id" jdbcType="INTEGER" property="epolyee_Id" />
+    <association property="epolyee" javaType="com.neusoft.pojo.Epolyee">
+    <id column="EpolyeeId" jdbcType="INTEGER" property="epolyeeId" />
+    <result column="EpolyeeName" jdbcType="VARCHAR" property="epolyeeName" />
+    <result column="Job_Id" jdbcType="INTEGER" property="job_Id" />
+    <result column="EpolyeeSex" jdbcType="VARCHAR" property="epolyeeSex" />
+    <result column="EpolyeeAge" jdbcType="VARCHAR" property="epolyeeAge" />
+    <result column="EpolyeeState" jdbcType="INTEGER" property="epolyeeState" />
+    <result column="Admin_Id" jdbcType="INTEGER" property="admin_Id" />  
+     <association property="Job" javaType="com.neusoft.pojo.Job">
+     <id column="jobId" jdbcType="INTEGER" property="jobId" />
+     <result column="jobName" jdbcType="VARCHAR" property="jobName" />
+    </association>     
+    </association>
+  </resultMap> 
+ 
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    OrderId, User_Id, Bespeak_Id, OrderDate, OrderPrice, OrderComment, OrderState
+  </sql>
+  <select id="selectByExample" parameterType="com.neusoft.pojo.OrderExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from `order`
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+    <if test="limit != null">
+      <if test="offset != null">
+        limit ${offset}, ${limit}
+      </if>
+      <if test="offset == null">
+        limit ${limit}
+      </if>
+    </if>
+  </select>
+  
+  <select id="count"  parameterType="com.neusoft.pojo.Order" resultType="int">
+  
+  select count(*) from `order`
+  <where>
+  <if test="orderState!=null">
+  orderState = #{orderState}
+  </if>
+  </where> 
+  </select>
+<select id="selectOrderByUserId" resultMap="OrderMap" parameterType="int">
+
+select * from `order` where user_Id = #{user_Id}
+</select>	
+
+	<select id="selectOrderCar"  resultMap="cMap" parameterType="int">
+		
+	SELECT   CarId, CarName, CarType, CarClient, CarState,carTypeName,car_Id from
+Car,Cartype ,`order` ,ordercar  where 1=1 and orderid= order_id and CarType = carTypeId  and CarId = Car_Id and orderId=#{orderId}
+	
+	</select>
+		
+<select id="selectOrderEpolyee"  resultMap="eMap" parameterType="int">
+		
+SELECT  EpolyeeId, EpolyeeName, Job_Id, EpolyeeSex, EpolyeeAge, EpolyeeState, Admin_Id ,jobName,epolyee_Id from
+epolyee,job, `order` ,orderepolyee where 1=1 and orderid= order_id and epolyeeId = epolyee_Id and Job_Id = jobId and orderId=#{orderId}
+	
+</select>
+  
+   <select id="selectOrder" resultMap="BaseResultMap" parameterType="java.util.HashMap"> 
+  select 
+  <include refid="Base_Column_List"></include> from
+  `order`
+  <if test="orderState!=null">
+  where
+  orderState=#{orderState}
+  </if>
+  <if test="start!=null and size!=null and flag!=null">
+            limit #{start},#{size}
+        </if>
+         
+  </select>
+  
+  
+  <select id="selectOrderByLike" parameterType="java.util.HashMap" resultMap="OrderMap">
+   select
+  <include refid="Base_Column_List"></include> from
+  `order` where 1=1
+    <if test=" str!=null and str!='' ">     
+    and  orderId = (CONVERT(#{str},SIGNED))
+    </if>
+    <if test="check_begin_date!=null and check_begin_date!=''">
+		<![CDATA[
+			  and OrderDate >= #{check_begin_date}
+		]]>
+		</if>
+	<if test="check_end_date!=null and check_end_date!=''">
+		<![CDATA[
+				 and OrderDate <= #{check_end_date}
+			 ]]>
+		</if>	
+    </select>
+  
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from `order`
+    where OrderId = #{orderId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from `order`
+    where OrderId = #{orderId,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.neusoft.pojo.OrderExample">
+    delete from `order`
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.neusoft.pojo.Order">
+    <selectKey keyProperty="orderId" order="AFTER" resultType="java.lang.Integer">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into `order` (User_Id, Bespeak_Id, OrderDate, 
+      OrderPrice, OrderComment, OrderState
+      )
+    values (#{user_Id,jdbcType=INTEGER}, #{bespeak_Id,jdbcType=INTEGER}, #{orderDate,jdbcType=TIMESTAMP}, 
+      #{orderPrice,jdbcType=DOUBLE}, #{orderComment,jdbcType=VARCHAR}, #{orderState,jdbcType=INTEGER}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.neusoft.pojo.Order">
+    <selectKey keyProperty="orderId" order="AFTER" resultType="java.lang.Integer">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into `order`
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="user_Id != null">
+        User_Id,
+      </if>
+      <if test="bespeak_Id != null">
+        Bespeak_Id,
+      </if>
+      <if test="orderDate != null">
+        OrderDate,
+      </if>
+      <if test="orderPrice != null">
+        OrderPrice,
+      </if>
+      <if test="orderComment != null">
+        OrderComment,
+      </if>
+      <if test="orderState != null">
+        OrderState,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="user_Id != null">
+        #{user_Id,jdbcType=INTEGER},
+      </if>
+      <if test="bespeak_Id != null">
+        #{bespeak_Id,jdbcType=INTEGER},
+      </if>
+      <if test="orderDate != null">
+        #{orderDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="orderPrice != null">
+        #{orderPrice,jdbcType=DOUBLE},
+      </if>
+      <if test="orderComment != null">
+        #{orderComment,jdbcType=VARCHAR},
+      </if>
+      <if test="orderState != null">
+        #{orderState,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.neusoft.pojo.OrderExample" resultType="java.lang.Long">
+    select count(*) from `order`
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update `order`
+    <set>
+      <if test="record.orderId != null">
+        OrderId = #{record.orderId,jdbcType=INTEGER},
+      </if>
+      <if test="record.user_Id != null">
+        User_Id = #{record.user_Id,jdbcType=INTEGER},
+      </if>
+      <if test="record.bespeak_Id != null">
+        Bespeak_Id = #{record.bespeak_Id,jdbcType=INTEGER},
+      </if>
+      <if test="record.orderDate != null">
+        OrderDate = #{record.orderDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.orderPrice != null">
+        OrderPrice = #{record.orderPrice,jdbcType=DOUBLE},
+      </if>
+      <if test="record.orderComment != null">
+        OrderComment = #{record.orderComment,jdbcType=VARCHAR},
+      </if>
+      <if test="record.orderState != null">
+        OrderState = #{record.orderState,jdbcType=INTEGER},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update `order`
+    set OrderId = #{record.orderId,jdbcType=INTEGER},
+      User_Id = #{record.user_Id,jdbcType=INTEGER},
+      Bespeak_Id = #{record.bespeak_Id,jdbcType=INTEGER},
+      OrderDate = #{record.orderDate,jdbcType=TIMESTAMP},
+      OrderPrice = #{record.orderPrice,jdbcType=DOUBLE},
+      OrderComment = #{record.orderComment,jdbcType=VARCHAR},
+      OrderState = #{record.orderState,jdbcType=INTEGER}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.neusoft.pojo.Order">
+    update `order`
+    <set>
+      <if test="user_Id != null">
+        User_Id = #{user_Id,jdbcType=INTEGER},
+      </if>
+      <if test="bespeak_Id != null">
+        Bespeak_Id = #{bespeak_Id,jdbcType=INTEGER},
+      </if>
+      <if test="orderDate != null">
+        OrderDate = #{orderDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="orderPrice != null">
+        OrderPrice = #{orderPrice,jdbcType=DOUBLE},
+      </if>
+      <if test="orderComment != null">
+        OrderComment = #{orderComment,jdbcType=VARCHAR},
+      </if>
+      <if test="orderState != null">
+        OrderState = #{orderState,jdbcType=INTEGER},
+      </if>
+    </set>
+    where OrderId = #{orderId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.neusoft.pojo.Order">
+    update `order`
+    set User_Id = #{user_Id,jdbcType=INTEGER},
+      Bespeak_Id = #{bespeak_Id,jdbcType=INTEGER},
+      OrderDate = #{orderDate,jdbcType=TIMESTAMP},
+      OrderPrice = #{orderPrice,jdbcType=DOUBLE},
+      OrderComment = #{orderComment,jdbcType=VARCHAR},
+      OrderState = #{orderState,jdbcType=INTEGER}
+    where OrderId = #{orderId,jdbcType=INTEGER}
+  </update>
+</mapper>

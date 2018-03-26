@@ -1,0 +1,442 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.neusoft.mapper.BespeakMapper">
+  <resultMap id="BaseResultMap" type="com.neusoft.pojo.Bespeak">
+    <id column="BespeakId" jdbcType="INTEGER" property="bespeakId" />
+    <result column="User_Id" jdbcType="INTEGER" property="user_Id" />
+    <result column="BespeakCity" jdbcType="VARCHAR" property="bespeakCity" />
+    <result column="BespeakOut" jdbcType="VARCHAR" property="bespeakOut" />
+    <result column="BespeakIn" jdbcType="VARCHAR" property="bespeakIn" />
+    <result column="BespeakDate" jdbcType="TIMESTAMP" property="bespeakDate" />
+    <result column="BespeakAtten" jdbcType="VARCHAR" property="bespeakAtten" />
+    <result column="BespeakTel" jdbcType="VARCHAR" property="bespeakTel" />
+    <result column="GoodsType" jdbcType="VARCHAR" property="goodsType" />
+    <result column="ServiceType_Id" jdbcType="INTEGER" property="serviceType_Id" />
+    <result column="BespeakAdd" jdbcType="VARCHAR" property="bespeakAdd" />
+    <result column="Date" jdbcType="TIMESTAMP" property="date" />
+    <result column="BespeakState" jdbcType="INTEGER" property="bespeakState" />
+     <result column="count" jdbcType="INTEGER" property="count" />
+     <result column="months" jdbcType="VARCHAR" property="months" />
+  </resultMap>
+  
+  <resultMap id="BespeakMap" type="com.neusoft.pojo.Bespeak">
+    <id column="BespeakId" jdbcType="INTEGER" property="bespeakId" />
+    <result column="User_Id" jdbcType="INTEGER" property="user_Id" />
+    <result column="BespeakCity" jdbcType="VARCHAR" property="bespeakCity" />
+    <result column="BespeakOut" jdbcType="VARCHAR" property="bespeakOut" />
+    <result column="BespeakIn" jdbcType="VARCHAR" property="bespeakIn" />
+    <result column="BespeakDate" jdbcType="TIMESTAMP" property="bespeakDate" />
+    <result column="BespeakAtten" jdbcType="VARCHAR" property="bespeakAtten" />
+    <result column="BespeakTel" jdbcType="VARCHAR" property="bespeakTel" />
+    <result column="GoodsType" jdbcType="VARCHAR" property="goodsType" />
+    <result column="ServiceType_Id" jdbcType="INTEGER" property="serviceType_Id" />
+    <result column="BespeakAdd" jdbcType="VARCHAR" property="bespeakAdd" />
+    <result column="Date" jdbcType="TIMESTAMP" property="date" />
+    <result column="BespeakState" jdbcType="INTEGER" property="bespeakState" />
+      <result column="months" jdbcType="VARCHAR" property="months" />
+     <result column="count" jdbcType="INTEGER" property="count" />
+     <association property="servicetype" javaType="com.neusoft.pojo.Servicetype">
+     <id column="serviceTypeId" jdbcType="INTEGER" property="serviceTypeId" />
+     <result column="serviceTypeName" jdbcType="VARCHAR" property="serviceTypeName" />
+    </association>   
+   </resultMap>
+   
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    BespeakId, User_Id, BespeakCity, BespeakOut, BespeakIn, BespeakDate, BespeakAtten, 
+    BespeakTel, GoodsType, ServiceType_Id, BespeakAdd, Date, BespeakState
+  </sql>
+  <select id="selectByExample" parameterType="com.neusoft.pojo.BespeakExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from bespeak
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+    
+    
+    
+    
+    
+    <if test="limit != null">
+      <if test="offset != null">
+        limit ${offset}, ${limit}
+      </if>
+      <if test="offset == null">
+        limit ${limit}
+      </if>
+    </if>
+  </select>
+  
+  <select id="count"  parameterType="com.neusoft.pojo.Bespeak" resultType="int">
+  
+  select count(*) from Bespeak 
+  <where>
+  <if test="bespeakState!=null">
+  bespeakState = #{bespeakState}
+  </if>
+  </where> 
+  
+  </select>
+  
+   <select id="monthschart"   resultMap="BaseResultMap">
+   
+
+select DATE_FORMAT(BespeakDate,'%m月') months,count(*) as count  from bespeak group by months; 
+ 
+   </select>
+  
+  <select id="countstatistics"   resultMap="BespeakMap">
+  select serviceTypeName,count(serviceType_Id) as count from bespeak,servicetype WHERE
+  serviceType_Id = serviceTypeId
+  group by serviceType_Id
+  </select>
+  
+  
+  <select id="selectBespeak" resultMap="BespeakMap" parameterType="java.util.HashMap"> 
+  select 
+  <include refid="Base_Column_List"></include>,serviceTypeName from
+  Bespeak,servicetype where ServiceType_Id = serviceTypeId and 1=1 
+  <if test="bespeakState!=null">
+  and 
+  BespeakState=#{bespeakState}
+  
+     order by bespeakDate desc
+  </if>
+  <if test="start!=null and size!=null">
+            limit #{start},#{size}
+        </if>
+     
+  </select>
+  
+  <select id="selectBespeakByLike" parameterType="java.util.HashMap" resultMap="BespeakMap">
+  select
+   <include refid="Base_Column_List"></include>,serviceTypeName from
+    Bespeak,servicetype where ServiceType_Id = serviceTypeId and 1=1 
+    <if test=" str!=null and str!='' ">     
+    and  BespeakId = (CONVERT(#{str},SIGNED))
+    </if>
+    <if test=" str!=null and str!='' ">     
+    or bespeakAtten like "%${str}%"
+    </if>
+    <if test="check_begin_date!=null and check_begin_date!=''">
+		<![CDATA[
+			  and BespeakDate >= #{check_begin_date}
+		
+		]]>
+		</if>
+	<if test="check_end_date!=null and check_end_date!=''">
+		<![CDATA[
+				 and BespeakDate <= #{check_end_date}
+			 ]]>
+		</if>	
+    </select>
+    
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BespeakMap">
+    select 
+    <include refid="Base_Column_List" />,serviceTypeName from
+    Bespeak,servicetype
+    where ServiceType_Id = serviceTypeId and BespeakId = #{bespeakId,jdbcType=INTEGER}
+  </select>
+  
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from bespeak
+    where BespeakId = #{bespeakId,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.neusoft.pojo.BespeakExample">
+    delete from bespeak
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.neusoft.pojo.Bespeak">
+    insert into bespeak (BespeakId, User_Id, BespeakCity, 
+      BespeakOut, BespeakIn, BespeakDate, 
+      BespeakAtten, BespeakTel, GoodsType, 
+      ServiceType_Id, BespeakAdd, Date, 
+      BespeakState)
+    values (#{bespeakId,jdbcType=INTEGER}, #{user_Id,jdbcType=INTEGER}, #{bespeakCity,jdbcType=VARCHAR}, 
+      #{bespeakOut,jdbcType=VARCHAR}, #{bespeakIn,jdbcType=VARCHAR}, #{bespeakDate,jdbcType=TIMESTAMP}, 
+      #{bespeakAtten,jdbcType=VARCHAR}, #{bespeakTel,jdbcType=VARCHAR}, #{goodsType,jdbcType=VARCHAR}, 
+      #{serviceType_Id,jdbcType=INTEGER}, #{bespeakAdd,jdbcType=VARCHAR}, #{date,jdbcType=TIMESTAMP}, 
+      #{bespeakState,jdbcType=INTEGER})
+  </insert>
+  <insert id="insertSelective" parameterType="com.neusoft.pojo.Bespeak">
+    insert into bespeak
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="bespeakId != null">
+        BespeakId,
+      </if>
+      <if test="user_Id != null">
+        User_Id,
+      </if>
+      <if test="bespeakCity != null">
+        BespeakCity,
+      </if>
+      <if test="bespeakOut != null">
+        BespeakOut,
+      </if>
+      <if test="bespeakIn != null">
+        BespeakIn,
+      </if>
+      <if test="bespeakDate != null">
+        BespeakDate,
+      </if>
+      <if test="bespeakAtten != null">
+        BespeakAtten,
+      </if>
+      <if test="bespeakTel != null">
+        BespeakTel,
+      </if>
+      <if test="goodsType != null">
+        GoodsType,
+      </if>
+      <if test="serviceType_Id != null">
+        ServiceType_Id,
+      </if>
+      <if test="bespeakAdd != null">
+        BespeakAdd,
+      </if>
+      <if test="date != null">
+        Date,
+      </if>
+      <if test="bespeakState != null">
+        BespeakState,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="bespeakId != null">
+        #{bespeakId,jdbcType=INTEGER},
+      </if>
+      <if test="user_Id != null">
+        #{user_Id,jdbcType=INTEGER},
+      </if>
+      <if test="bespeakCity != null">
+        #{bespeakCity,jdbcType=VARCHAR},
+      </if>
+      <if test="bespeakOut != null">
+        #{bespeakOut,jdbcType=VARCHAR},
+      </if>
+      <if test="bespeakIn != null">
+        #{bespeakIn,jdbcType=VARCHAR},
+      </if>
+      <if test="bespeakDate != null">
+        #{bespeakDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="bespeakAtten != null">
+        #{bespeakAtten,jdbcType=VARCHAR},
+      </if>
+      <if test="bespeakTel != null">
+        #{bespeakTel,jdbcType=VARCHAR},
+      </if>
+      <if test="goodsType != null">
+        #{goodsType,jdbcType=VARCHAR},
+      </if>
+      <if test="serviceType_Id != null">
+        #{serviceType_Id,jdbcType=INTEGER},
+      </if>
+      <if test="bespeakAdd != null">
+        #{bespeakAdd,jdbcType=VARCHAR},
+      </if>
+      <if test="date != null">
+        #{date,jdbcType=TIMESTAMP},
+      </if>
+      <if test="bespeakState != null">
+        #{bespeakState,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.neusoft.pojo.BespeakExample" resultType="java.lang.Long">
+    select count(*) from bespeak
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update bespeak
+    <set>
+      <if test="record.bespeakId != null">
+        BespeakId = #{record.bespeakId,jdbcType=INTEGER},
+      </if>
+      <if test="record.user_Id != null">
+        User_Id = #{record.user_Id,jdbcType=INTEGER},
+      </if>
+      <if test="record.bespeakCity != null">
+        BespeakCity = #{record.bespeakCity,jdbcType=VARCHAR},
+      </if>
+      <if test="record.bespeakOut != null">
+        BespeakOut = #{record.bespeakOut,jdbcType=VARCHAR},
+      </if>
+      <if test="record.bespeakIn != null">
+        BespeakIn = #{record.bespeakIn,jdbcType=VARCHAR},
+      </if>
+      <if test="record.bespeakDate != null">
+        BespeakDate = #{record.bespeakDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.bespeakAtten != null">
+        BespeakAtten = #{record.bespeakAtten,jdbcType=VARCHAR},
+      </if>
+      <if test="record.bespeakTel != null">
+        BespeakTel = #{record.bespeakTel,jdbcType=VARCHAR},
+      </if>
+      <if test="record.goodsType != null">
+        GoodsType = #{record.goodsType,jdbcType=VARCHAR},
+      </if>
+      <if test="record.serviceType_Id != null">
+        ServiceType_Id = #{record.serviceType_Id,jdbcType=INTEGER},
+      </if>
+      <if test="record.bespeakAdd != null">
+        BespeakAdd = #{record.bespeakAdd,jdbcType=VARCHAR},
+      </if>
+      <if test="record.date != null">
+        Date = #{record.date,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.bespeakState != null">
+        BespeakState = #{record.bespeakState,jdbcType=INTEGER},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update bespeak
+    set BespeakId = #{record.bespeakId,jdbcType=INTEGER},
+      User_Id = #{record.user_Id,jdbcType=INTEGER},
+      BespeakCity = #{record.bespeakCity,jdbcType=VARCHAR},
+      BespeakOut = #{record.bespeakOut,jdbcType=VARCHAR},
+      BespeakIn = #{record.bespeakIn,jdbcType=VARCHAR},
+      BespeakDate = #{record.bespeakDate,jdbcType=TIMESTAMP},
+      BespeakAtten = #{record.bespeakAtten,jdbcType=VARCHAR},
+      BespeakTel = #{record.bespeakTel,jdbcType=VARCHAR},
+      GoodsType = #{record.goodsType,jdbcType=VARCHAR},
+      ServiceType_Id = #{record.serviceType_Id,jdbcType=INTEGER},
+      BespeakAdd = #{record.bespeakAdd,jdbcType=VARCHAR},
+      Date = #{record.date,jdbcType=TIMESTAMP},
+      BespeakState = #{record.bespeakState,jdbcType=INTEGER}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.neusoft.pojo.Bespeak">
+    update bespeak
+    <set>
+      <if test="user_Id != null">
+        User_Id = #{user_Id,jdbcType=INTEGER},
+      </if>
+      <if test="bespeakCity != null">
+        BespeakCity = #{bespeakCity,jdbcType=VARCHAR},
+      </if>
+      <if test="bespeakOut != null">
+        BespeakOut = #{bespeakOut,jdbcType=VARCHAR},
+      </if>
+      <if test="bespeakIn != null">
+        BespeakIn = #{bespeakIn,jdbcType=VARCHAR},
+      </if>
+      <if test="bespeakDate != null">
+        BespeakDate = #{bespeakDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="bespeakAtten != null">
+        BespeakAtten = #{bespeakAtten,jdbcType=VARCHAR},
+      </if>
+      <if test="bespeakTel != null">
+        BespeakTel = #{bespeakTel,jdbcType=VARCHAR},
+      </if>
+      <if test="goodsType != null">
+        GoodsType = #{goodsType,jdbcType=VARCHAR},
+      </if>
+      <if test="serviceType_Id != null">
+        ServiceType_Id = #{serviceType_Id,jdbcType=INTEGER},
+      </if>
+      <if test="bespeakAdd != null">
+        BespeakAdd = #{bespeakAdd,jdbcType=VARCHAR},
+      </if>
+      <if test="date != null">
+        Date = #{date,jdbcType=TIMESTAMP},
+      </if>
+      <if test="bespeakState != null">
+        BespeakState = #{bespeakState,jdbcType=INTEGER},
+      </if>
+    </set>
+    where BespeakId = #{bespeakId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.neusoft.pojo.Bespeak">
+    update bespeak
+    set User_Id = #{user_Id,jdbcType=INTEGER},
+      BespeakCity = #{bespeakCity,jdbcType=VARCHAR},
+      BespeakOut = #{bespeakOut,jdbcType=VARCHAR},
+      BespeakIn = #{bespeakIn,jdbcType=VARCHAR},
+      BespeakDate = #{bespeakDate,jdbcType=TIMESTAMP},
+      BespeakAtten = #{bespeakAtten,jdbcType=VARCHAR},
+      BespeakTel = #{bespeakTel,jdbcType=VARCHAR},
+      GoodsType = #{goodsType,jdbcType=VARCHAR},
+      ServiceType_Id = #{serviceType_Id,jdbcType=INTEGER},
+      BespeakAdd = #{bespeakAdd,jdbcType=VARCHAR},
+      Date = #{date,jdbcType=TIMESTAMP},
+      BespeakState = #{bespeakState,jdbcType=INTEGER}
+    where BespeakId = #{bespeakId,jdbcType=INTEGER}
+  </update>
+</mapper>

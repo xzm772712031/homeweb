@@ -1,0 +1,398 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.neusoft.mapper.InsuranceMapper">
+  <resultMap id="BaseResultMap" type="com.neusoft.pojo.Insurance">
+    <id column="InsuranceId" jdbcType="INTEGER" property="insuranceId" />
+    <result column="User_Id" jdbcType="INTEGER" property="user_Id" />
+    <result column="OrderId" jdbcType="INTEGER" property="orderId" />
+    <result column="InsurancePrice" jdbcType="DECIMAL" property="insurancePrice" />
+    <result column="InsuranceDate" jdbcType="TIMESTAMP" property="insuranceDate" />
+    <result column="InsuranceCost" jdbcType="DECIMAL" property="insuranceCost" />
+    <result column="InsuranceOwner" jdbcType="VARCHAR" property="insuranceOwner" />
+    <result column="OwnerIdentify" jdbcType="VARCHAR" property="ownerIdentify" />
+    <result column="InsuranceComment" jdbcType="VARCHAR" property="insuranceComment" />
+    <result column="Bespeak_Id" jdbcType="INTEGER" property="bespeak_Id" />
+    <result column="InsuranceState" jdbcType="INTEGER" property="insuranceState" />
+     <association property="user" javaType="com.neusoft.pojo.User">
+     <id column="userId" jdbcType="INTEGER" property="userId" />
+     <result column="userName" jdbcType="VARCHAR" property="userName" />
+    </association>   
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    InsuranceId, User_Id, OrderId, InsurancePrice, InsuranceDate, InsuranceCost, InsuranceOwner, 
+    OwnerIdentify, InsuranceComment, Bespeak_Id,insuranceState
+  </sql>
+  <select id="selectByExample" parameterType="com.neusoft.pojo.InsuranceExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from insurance
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+    <if test="limit != null">
+      <if test="offset != null">
+        limit ${offset}, ${limit}
+      </if>
+      <if test="offset == null">
+        limit ${limit}
+      </if>
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from insurance
+    where InsuranceId = #{insuranceId,jdbcType=INTEGER}
+  </select>
+  
+  <select id="selectByBespeakId" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+  select 
+    <include refid="Base_Column_List" />
+    from insurance
+    where Bespeak_Id = #{Bespeak_Id,jdbcType=INTEGER}
+  </select>
+  
+  <select id="count"  parameterType="com.neusoft.pojo.Insurance" resultType="int">
+  
+  select count(*) from Insurance 
+  <where>
+  <if test="insuranceState!=null">
+  insuranceState = #{insuranceState}
+  </if>
+  </where> 
+  
+  </select>
+  
+     <select id="selectInsuranceByLike" parameterType="String" resultMap="BaseResultMap">
+  select
+   <include refid="Base_Column_List"></include>,userName from user,Insurance
+  where userid=user_Id and 1=1
+    <if test=" _parameter!=null and  _parameter!='' ">     
+    and  insuranceId = (CONVERT(#{_parameter},SIGNED))
+    </if>
+    <if test=" _parameter!=null and  _parameter!='' ">     
+    or InsuranceOwner like "%${_parameter}%"
+    </if>
+   </select> 
+  
+  
+  <select id="selectInsurance" resultMap="BaseResultMap" parameterType="java.util.HashMap"> 
+  select 
+  <include refid="Base_Column_List"></include>,userName from user,Insurance
+  where userid=user_Id and 1=1
+  <if test="bespeakState!=null">
+  and 
+  insuranceState = #{insuranceState}
+  </if>
+  <if test="start!=null and size!=null">
+            limit #{start},#{size}
+        </if>
+  </select>
+  
+  
+    
+    
+   
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from insurance
+    where InsuranceId = #{insuranceId,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.neusoft.pojo.InsuranceExample">
+    delete from insurance
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.neusoft.pojo.Insurance">
+    <selectKey keyProperty="insuranceId" order="AFTER" resultType="java.lang.Integer">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into insurance (User_Id, OrderId, InsurancePrice, 
+      InsuranceDate, InsuranceCost, InsuranceOwner, 
+      OwnerIdentify, InsuranceComment, Bespeak_Id
+      )
+    values (#{user_Id,jdbcType=INTEGER}, #{orderId,jdbcType=INTEGER}, #{insurancePrice,jdbcType=DECIMAL}, 
+      #{insuranceDate,jdbcType=TIMESTAMP}, #{insuranceCost,jdbcType=DECIMAL}, #{insuranceOwner,jdbcType=VARCHAR}, 
+      #{ownerIdentify,jdbcType=VARCHAR}, #{insuranceComment,jdbcType=VARCHAR}, #{bespeak_Id,jdbcType=INTEGER}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.neusoft.pojo.Insurance">
+    <selectKey keyProperty="insuranceId" order="AFTER" resultType="java.lang.Integer">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into insurance
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="user_Id != null">
+        User_Id,
+      </if>
+      <if test="orderId != null">
+        OrderId,
+      </if>
+      <if test="insurancePrice != null">
+        InsurancePrice,
+      </if>
+      <if test="insuranceDate != null">
+        InsuranceDate,
+      </if>
+      <if test="insuranceCost != null">
+        InsuranceCost,
+      </if>
+      <if test="insuranceOwner != null">
+        InsuranceOwner,
+      </if>
+      <if test="ownerIdentify != null">
+        OwnerIdentify,
+      </if>
+      <if test="insuranceComment != null">
+        InsuranceComment,
+      </if>
+      <if test="bespeak_Id != null">
+        Bespeak_Id,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="user_Id != null">
+        #{user_Id,jdbcType=INTEGER},
+      </if>
+      <if test="orderId != null">
+        #{orderId,jdbcType=INTEGER},
+      </if>
+      <if test="insurancePrice != null">
+        #{insurancePrice,jdbcType=DECIMAL},
+      </if>
+      <if test="insuranceDate != null">
+        #{insuranceDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="insuranceCost != null">
+        #{insuranceCost,jdbcType=DECIMAL},
+      </if>
+      <if test="insuranceOwner != null">
+        #{insuranceOwner,jdbcType=VARCHAR},
+      </if>
+      <if test="ownerIdentify != null">
+        #{ownerIdentify,jdbcType=VARCHAR},
+      </if>
+      <if test="insuranceComment != null">
+        #{insuranceComment,jdbcType=VARCHAR},
+      </if>
+      <if test="bespeak_Id != null">
+        #{bespeak_Id,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.neusoft.pojo.InsuranceExample" resultType="java.lang.Long">
+    select count(*) from insurance
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update insurance
+    <set>
+      <if test="record.insuranceId != null">
+        InsuranceId = #{record.insuranceId,jdbcType=INTEGER},
+      </if>
+      <if test="record.user_Id != null">
+        User_Id = #{record.user_Id,jdbcType=INTEGER},
+      </if>
+      <if test="record.orderId != null">
+        OrderId = #{record.orderId,jdbcType=INTEGER},
+      </if>
+      <if test="record.insurancePrice != null">
+        InsurancePrice = #{record.insurancePrice,jdbcType=DECIMAL},
+      </if>
+      <if test="record.insuranceDate != null">
+        InsuranceDate = #{record.insuranceDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.insuranceCost != null">
+        InsuranceCost = #{record.insuranceCost,jdbcType=DECIMAL},
+      </if>
+      <if test="record.insuranceOwner != null">
+        InsuranceOwner = #{record.insuranceOwner,jdbcType=VARCHAR},
+      </if>
+      <if test="record.ownerIdentify != null">
+        OwnerIdentify = #{record.ownerIdentify,jdbcType=VARCHAR},
+      </if>
+      <if test="record.insuranceComment != null">
+        InsuranceComment = #{record.insuranceComment,jdbcType=VARCHAR},
+      </if>
+      <if test="record.bespeak_Id != null">
+        Bespeak_Id = #{record.bespeak_Id,jdbcType=INTEGER},
+      </if>
+      
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update insurance
+    set InsuranceId = #{record.insuranceId,jdbcType=INTEGER},
+      User_Id = #{record.user_Id,jdbcType=INTEGER},
+      OrderId = #{record.orderId,jdbcType=INTEGER},
+      InsurancePrice = #{record.insurancePrice,jdbcType=DECIMAL},
+      InsuranceDate = #{record.insuranceDate,jdbcType=TIMESTAMP},
+      InsuranceCost = #{record.insuranceCost,jdbcType=DECIMAL},
+      InsuranceOwner = #{record.insuranceOwner,jdbcType=VARCHAR},
+      OwnerIdentify = #{record.ownerIdentify,jdbcType=VARCHAR},
+      InsuranceComment = #{record.insuranceComment,jdbcType=VARCHAR},
+      Bespeak_Id = #{record.bespeak_Id,jdbcType=INTEGER}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.neusoft.pojo.Insurance">
+    update insurance
+    <set>
+      <if test="user_Id != null">
+        User_Id = #{user_Id,jdbcType=INTEGER},
+      </if>
+      <if test="orderId != null">
+        OrderId = #{orderId,jdbcType=INTEGER},
+      </if>
+      <if test="insurancePrice != null">
+        InsurancePrice = #{insurancePrice,jdbcType=DECIMAL},
+      </if>
+      <if test="insuranceDate != null">
+        InsuranceDate = #{insuranceDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="insuranceCost != null">
+        InsuranceCost = #{insuranceCost,jdbcType=DECIMAL},
+      </if>
+      <if test="insuranceOwner != null">
+        InsuranceOwner = #{insuranceOwner,jdbcType=VARCHAR},
+      </if>
+      <if test="ownerIdentify != null">
+        OwnerIdentify = #{ownerIdentify,jdbcType=VARCHAR},
+      </if>
+      <if test="insuranceComment != null">
+        InsuranceComment = #{insuranceComment,jdbcType=VARCHAR},
+      </if>
+      <if test="bespeak_Id != null">
+        Bespeak_Id = #{bespeak_Id,jdbcType=INTEGER},
+      </if>
+      <if test="insuranceState != null">
+        insuranceState = #{insuranceState,jdbcType=INTEGER},
+      </if>
+    </set>
+    where InsuranceId = #{insuranceId,jdbcType=INTEGER}
+  </update>
+  
+   <update id="updateByBespeakIdSelective" parameterType="com.neusoft.pojo.Insurance">
+    update insurance
+    <set>
+      <if test="user_Id != null">
+        User_Id = #{user_Id,jdbcType=INTEGER},
+      </if>
+      <if test="orderId != null">
+        OrderId = #{orderId,jdbcType=INTEGER},
+      </if>
+      <if test="insurancePrice != null">
+        InsurancePrice = #{insurancePrice,jdbcType=DECIMAL},
+      </if>
+      <if test="insuranceDate != null">
+        InsuranceDate = #{insuranceDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="insuranceCost != null">
+        InsuranceCost = #{insuranceCost,jdbcType=DECIMAL},
+      </if>
+      <if test="insuranceOwner != null">
+        InsuranceOwner = #{insuranceOwner,jdbcType=VARCHAR},
+      </if>
+      <if test="ownerIdentify != null">
+        OwnerIdentify = #{ownerIdentify,jdbcType=VARCHAR},
+      </if>
+      <if test="insuranceComment != null">
+        InsuranceComment = #{insuranceComment,jdbcType=VARCHAR},
+      </if>
+      <if test="bespeak_Id != null">
+        Bespeak_Id = #{bespeak_Id,jdbcType=INTEGER},
+      </if>
+      <if test="bespeak_Id != null">
+        insuranceState = #{insuranceState,jdbcType=INTEGER},
+      </if>
+    </set>
+    where bespeak_Id = #{bespeak_Id,jdbcType=INTEGER}
+  </update>
+  
+  
+  
+  
+  <update id="updateByPrimaryKey" parameterType="com.neusoft.pojo.Insurance">
+    update insurance
+    set User_Id = #{user_Id,jdbcType=INTEGER},
+      OrderId = #{orderId,jdbcType=INTEGER},
+      InsurancePrice = #{insurancePrice,jdbcType=DECIMAL},
+      InsuranceDate = #{insuranceDate,jdbcType=TIMESTAMP},
+      InsuranceCost = #{insuranceCost,jdbcType=DECIMAL},
+      InsuranceOwner = #{insuranceOwner,jdbcType=VARCHAR},
+      OwnerIdentify = #{ownerIdentify,jdbcType=VARCHAR},
+      InsuranceComment = #{insuranceComment,jdbcType=VARCHAR},
+      Bespeak_Id = #{bespeak_Id,jdbcType=INTEGER}
+    where InsuranceId = #{insuranceId,jdbcType=INTEGER}
+  </update>
+</mapper>

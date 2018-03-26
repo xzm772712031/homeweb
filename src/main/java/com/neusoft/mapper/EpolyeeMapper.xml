@@ -1,0 +1,333 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.neusoft.mapper.EpolyeeMapper">
+  <resultMap id="BaseResultMap" type="com.neusoft.pojo.Epolyee">
+    <id column="EpolyeeId" jdbcType="INTEGER" property="epolyeeId" />
+    <result column="EpolyeeName" jdbcType="VARCHAR" property="epolyeeName" />
+    <result column="Job_Id" jdbcType="INTEGER" property="job_Id" />
+    <result column="EpolyeeSex" jdbcType="VARCHAR" property="epolyeeSex" />
+    <result column="EpolyeeAge" jdbcType="VARCHAR" property="epolyeeAge" />
+    <result column="EpolyeeState" jdbcType="INTEGER" property="epolyeeState" />
+    <result column="Admin_Id" jdbcType="INTEGER" property="admin_Id" />
+    <result column="EpolyeeTel" jdbcType="VARCHAR" property="EpolyeeTel" />
+  </resultMap>
+  
+   <resultMap id="EpolyeetMap" type="com.neusoft.pojo.Epolyee">
+    <id column="EpolyeeId" jdbcType="INTEGER" property="epolyeeId" />
+    <result column="EpolyeeName" jdbcType="VARCHAR" property="epolyeeName" />
+    <result column="Job_Id" jdbcType="INTEGER" property="job_Id" />
+    <result column="EpolyeeSex" jdbcType="VARCHAR" property="epolyeeSex" />
+    <result column="EpolyeeAge" jdbcType="VARCHAR" property="epolyeeAge" />
+    <result column="EpolyeeState" jdbcType="INTEGER" property="epolyeeState" />
+     <result column="EpolyeeTel" jdbcType="VARCHAR" property="EpolyeeTel" />
+     <association property="Job" javaType="com.neusoft.pojo.Job">
+     <id column="jobId" jdbcType="INTEGER" property="jobId" />
+     <result column="jobName" jdbcType="VARCHAR" property="jobName" />
+    </association>  
+    
+  </resultMap>
+  
+  
+  
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    EpolyeeId, EpolyeeName, Job_Id, EpolyeeSex, EpolyeeAge, EpolyeeState, Admin_Id,EpolyeeTel
+  </sql>
+  <select id="selectByExample" parameterType="com.neusoft.pojo.EpolyeeExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from epolyee
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+    <if test="limit != null">
+      <if test="offset != null">
+        limit ${offset}, ${limit}
+      </if>
+      <if test="offset == null">
+        limit ${limit}
+      </if>
+    </if>
+  </select>
+ 
+  <select id="count"  parameterType="com.neusoft.pojo.Epolyee" resultType="int">
+  
+  select count(*) from Epolyee 
+  <where>
+  <if test="epolyeeState!=null">
+  epolyeeState = #{epolyeeState}
+  </if>
+  </where> 
+  </select>
+  
+ 
+ 
+ 
+  <select id="selectEpolyee" resultMap="EpolyeetMap" parameterType="java.util.HashMap"> 
+  select 
+  <include refid="Base_Column_List"></include>,jobName from
+  epolyee,job where Job_Id = jobId and 1=1 
+  <if test="epolyeeState!=null">
+  and 
+  epolyeeState=#{epolyeeState}
+  </if>
+  <if test="start!=null and size!=null and flag!=null">
+            limit #{start},#{size}
+        </if>
+  </select>
+  
+  
+  
+  
+  
+     <select id="selectEpolyeeByLike" parameterType="String" resultMap="EpolyeetMap">
+  select
+   <include refid="Base_Column_List"></include>,jobName from
+  epolyee,job where Job_Id = jobId and 1=1 
+    <if test=" _parameter!=null and  _parameter!='' ">     
+    and  epolyeeId = (CONVERT(#{_parameter},SIGNED))
+    </if>
+    <if test=" _parameter!=null and  _parameter!='' ">     
+    or epolyeeName like "%${_parameter}%"
+    </if>
+   </select> 
+  
+  
+  
+  
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="EpolyeetMap">
+    select 
+    <include refid="Base_Column_List" />,jobName
+    from epolyee,job
+    where Job_Id = jobId and
+    EpolyeeId = #{epolyeeId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from epolyee
+    where EpolyeeId = #{epolyeeId,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.neusoft.pojo.EpolyeeExample">
+    delete from epolyee
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.neusoft.pojo.Epolyee">
+    insert into epolyee (EpolyeeId, EpolyeeName, Job_Id, 
+      EpolyeeSex, EpolyeeAge, EpolyeeState, 
+      Admin_Id)
+    values (#{epolyeeId,jdbcType=INTEGER}, #{epolyeeName,jdbcType=VARCHAR}, #{job_Id,jdbcType=INTEGER}, 
+      #{epolyeeSex,jdbcType=VARCHAR}, #{epolyeeAge,jdbcType=VARCHAR}, #{epolyeeState,jdbcType=INTEGER}, 
+      #{admin_Id,jdbcType=INTEGER})
+  </insert>
+  <insert id="insertSelective" parameterType="com.neusoft.pojo.Epolyee">
+    insert into epolyee
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="epolyeeId != null">
+        EpolyeeId,
+      </if>
+      <if test="epolyeeName != null">
+        EpolyeeName,
+      </if>
+      <if test="job_Id != null">
+        Job_Id,
+      </if>
+      <if test="epolyeeSex != null">
+        EpolyeeSex,
+      </if>
+      <if test="epolyeeAge != null">
+        EpolyeeAge,
+      </if>
+      <if test="epolyeeState != null">
+        EpolyeeState,
+      </if>
+      <if test="admin_Id != null">
+        Admin_Id,
+      </if>
+      <if test="EpolyeeTel != null">
+        EpolyeeTel,
+      </if>
+      
+    
+      
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="epolyeeId != null">
+        #{epolyeeId,jdbcType=INTEGER},
+      </if>
+      <if test="epolyeeName != null">
+        #{epolyeeName,jdbcType=VARCHAR},
+      </if>
+      <if test="job_Id != null">
+        #{job_Id,jdbcType=INTEGER},
+      </if>
+      <if test="epolyeeSex != null">
+        #{epolyeeSex,jdbcType=VARCHAR},
+      </if>
+      <if test="epolyeeAge != null">
+        #{epolyeeAge,jdbcType=VARCHAR},
+      </if>
+      <if test="epolyeeState != null">
+        #{epolyeeState,jdbcType=INTEGER},
+      </if>
+      <if test="admin_Id != null">
+        #{admin_Id,jdbcType=INTEGER},
+      </if>
+      <if test="EpolyeeTel!= null">
+        #{EpolyeeTel,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.neusoft.pojo.EpolyeeExample" resultType="java.lang.Long">
+    select count(*) from epolyee
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update epolyee
+    <set>
+      <if test="record.epolyeeId != null">
+        EpolyeeId = #{record.epolyeeId,jdbcType=INTEGER},
+      </if>
+      <if test="record.epolyeeName != null">
+        EpolyeeName = #{record.epolyeeName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.job_Id != null">
+        Job_Id = #{record.job_Id,jdbcType=INTEGER},
+      </if>
+      <if test="record.epolyeeSex != null">
+        EpolyeeSex = #{record.epolyeeSex,jdbcType=VARCHAR},
+      </if>
+      <if test="record.epolyeeAge != null">
+        EpolyeeAge = #{record.epolyeeAge,jdbcType=VARCHAR},
+      </if>
+      <if test="record.epolyeeState != null">
+        EpolyeeState = #{record.epolyeeState,jdbcType=INTEGER},
+      </if>
+      <if test="record.admin_Id != null">
+        Admin_Id = #{record.admin_Id,jdbcType=INTEGER},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update epolyee
+    set EpolyeeId = #{record.epolyeeId,jdbcType=INTEGER},
+      EpolyeeName = #{record.epolyeeName,jdbcType=VARCHAR},
+      Job_Id = #{record.job_Id,jdbcType=INTEGER},
+      EpolyeeSex = #{record.epolyeeSex,jdbcType=VARCHAR},
+      EpolyeeAge = #{record.epolyeeAge,jdbcType=VARCHAR},
+      EpolyeeState = #{record.epolyeeState,jdbcType=INTEGER},
+      Admin_Id = #{record.admin_Id,jdbcType=INTEGER}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  
+  
+  <update id="updateByPrimaryKeySelective" parameterType="com.neusoft.pojo.Epolyee">
+    update epolyee
+    <set>
+      <if test="epolyeeName != null">
+        EpolyeeName = #{epolyeeName,jdbcType=VARCHAR},
+      </if>
+      <if test="job_Id != null">
+        Job_Id = #{job_Id,jdbcType=INTEGER},
+      </if>
+      <if test="epolyeeSex != null">
+        EpolyeeSex = #{epolyeeSex,jdbcType=VARCHAR},
+      </if>
+      <if test="epolyeeAge != null">
+        EpolyeeAge = #{epolyeeAge,jdbcType=VARCHAR},
+      </if>
+      <if test="epolyeeState != null">
+        EpolyeeState = #{epolyeeState,jdbcType=INTEGER},
+      </if>
+      <if test="admin_Id != null">
+        Admin_Id = #{admin_Id,jdbcType=INTEGER},
+      </if>
+      <if test="EpolyeeTel!= null">
+       EpolyeeTel = #{EpolyeeTel,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where EpolyeeId = #{epolyeeId,jdbcType=INTEGER}
+  </update>
+  
+  
+  <update id="updateByPrimaryKey" parameterType="com.neusoft.pojo.Epolyee">
+    update epolyee
+    set EpolyeeName = #{epolyeeName,jdbcType=VARCHAR},
+      Job_Id = #{job_Id,jdbcType=INTEGER},
+      EpolyeeSex = #{epolyeeSex,jdbcType=VARCHAR},
+      EpolyeeAge = #{epolyeeAge,jdbcType=VARCHAR},
+      EpolyeeState = #{epolyeeState,jdbcType=INTEGER},
+      Admin_Id = #{admin_Id,jdbcType=INTEGER}
+    where EpolyeeId = #{epolyeeId,jdbcType=INTEGER}
+  </update>
+</mapper>

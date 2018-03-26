@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.neusoft.mapper.OrderepolyeeMapper">
+  <resultMap id="BaseResultMap" type="com.neusoft.pojo.Orderepolyee">
+    <id column="OrderdEpolyeeId" jdbcType="INTEGER" property="orderdEpolyeeId" />
+    <result column="Order_ID" jdbcType="INTEGER" property="order_ID" />
+    <result column="Epolyee_Id" jdbcType="INTEGER" property="epolyee_Id" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    OrderdEpolyeeId, Order_ID, Epolyee_Id
+  </sql>
+  <select id="selectByExample" parameterType="com.neusoft.pojo.OrderepolyeeExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from orderepolyee
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+    <if test="limit != null">
+      <if test="offset != null">
+        limit ${offset}, ${limit}
+      </if>
+      <if test="offset == null">
+        limit ${limit}
+      </if>
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from orderepolyee
+    where OrderdEpolyeeId = #{orderdEpolyeeId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from orderepolyee
+    where OrderdEpolyeeId = #{orderdEpolyeeId,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.neusoft.pojo.OrderepolyeeExample">
+    delete from orderepolyee
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.neusoft.pojo.Orderepolyee">
+    insert into orderepolyee (OrderdEpolyeeId, Order_ID, Epolyee_Id
+      )
+    values (#{orderdEpolyeeId,jdbcType=INTEGER}, #{order_ID,jdbcType=INTEGER}, #{epolyee_Id,jdbcType=INTEGER}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.neusoft.pojo.Orderepolyee">
+    insert into orderepolyee
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="orderdEpolyeeId != null">
+        OrderdEpolyeeId,
+      </if>
+      <if test="order_ID != null">
+        Order_ID,
+      </if>
+      <if test="epolyee_Id != null">
+        Epolyee_Id,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="orderdEpolyeeId != null">
+        #{orderdEpolyeeId,jdbcType=INTEGER},
+      </if>
+      <if test="order_ID != null">
+        #{order_ID,jdbcType=INTEGER},
+      </if>
+      <if test="epolyee_Id != null">
+        #{epolyee_Id,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.neusoft.pojo.OrderepolyeeExample" resultType="java.lang.Long">
+    select count(*) from orderepolyee
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update orderepolyee
+    <set>
+      <if test="record.orderdEpolyeeId != null">
+        OrderdEpolyeeId = #{record.orderdEpolyeeId,jdbcType=INTEGER},
+      </if>
+      <if test="record.order_ID != null">
+        Order_ID = #{record.order_ID,jdbcType=INTEGER},
+      </if>
+      <if test="record.epolyee_Id != null">
+        Epolyee_Id = #{record.epolyee_Id,jdbcType=INTEGER},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update orderepolyee
+    set OrderdEpolyeeId = #{record.orderdEpolyeeId,jdbcType=INTEGER},
+      Order_ID = #{record.order_ID,jdbcType=INTEGER},
+      Epolyee_Id = #{record.epolyee_Id,jdbcType=INTEGER}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.neusoft.pojo.Orderepolyee">
+    update orderepolyee
+    <set>
+      <if test="order_ID != null">
+        Order_ID = #{order_ID,jdbcType=INTEGER},
+      </if>
+      <if test="epolyee_Id != null">
+        Epolyee_Id = #{epolyee_Id,jdbcType=INTEGER},
+      </if>
+    </set>
+    where OrderdEpolyeeId = #{orderdEpolyeeId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.neusoft.pojo.Orderepolyee">
+    update orderepolyee
+    set Order_ID = #{order_ID,jdbcType=INTEGER},
+      Epolyee_Id = #{epolyee_Id,jdbcType=INTEGER}
+    where OrderdEpolyeeId = #{orderdEpolyeeId,jdbcType=INTEGER}
+  </update>
+</mapper>
